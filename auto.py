@@ -2,7 +2,7 @@ import tkinter as tk
 import threading
 import pyautogui
 import time
-
+import random
 x = 105
 y = 530
 loc_x, loc_y = None, None
@@ -37,6 +37,17 @@ def find_and_click(image, confidence=0.7):
                         time.sleep(2)
                 except pyautogui.ImageNotFoundException:
                     print("No ok")
+                try:
+                    px=None
+                    py=None
+                    px, py = pyautogui.locateCenterOnScreen('ok_res.png', confidence=0.99)
+                    if px is not None and py is not None:
+                        click(px, py)
+                        print("special ok")
+                        print(f"Found at ({px}, {py}). Adjusted to ({px}, {py}).")
+                        time.sleep(2)
+                except pyautogui.ImageNotFoundException:
+                    print("No special ok")
         try:  
             x, y = pyautogui.locateCenterOnScreen(image, confidence=confidence)
             if x is not None and y is not None:
@@ -46,7 +57,7 @@ def find_and_click(image, confidence=0.7):
                 break
         except pyautogui.ImageNotFoundException:
             print(f'Cannot see the location {image}')
-            click(loc_x,loc_y)
+            click(loc_x+random.uniform(1,10),loc_y+random.uniform(1,10))
             time.sleep(2)
             if(image!='ok_button_3.png'):
                 try:
@@ -110,7 +121,7 @@ def attack(de):
 def tryagain(de):
     time.sleep(de)
     find_and_click('ok_button_3.png',0.65)
-    time.sleep(1)
+    time.sleep(2)
     find_and_click('play_again.png',0.9)
 
 class AutoClickerApp:
